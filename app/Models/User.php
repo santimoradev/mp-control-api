@@ -20,7 +20,6 @@ class User extends Authenticatable implements JWTSubject
       'last_name',
       'first_name',
       'permissions',
-      'mall_id',
       'status'
     ];
 
@@ -32,8 +31,7 @@ class User extends Authenticatable implements JWTSubject
         'username'
     ];
     protected $casts = [
-        'mall_id' => 'integer',
-        'status' => 'boolean'
+        'status' => 'integer'
     ];
 
     public function getJWTIdentifier()
@@ -48,9 +46,5 @@ class User extends Authenticatable implements JWTSubject
     public function roles()
     {
     	return $this->belongsToMany( 'App\Models\Role' , 'role_users' , 'user_id' , 'role_id' );
-    }
-    public function mall()
-    {
-        return $this->hasOne('App\Models\Mall','id','mall_id');
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Console\Command;
 use Sentinel as Sentinel;
 
 class DataRoleSeeder extends Seeder
@@ -18,9 +19,6 @@ class DataRoleSeeder extends Seeder
   public function run()
   {
     Model::unguard();
-    DB::table('roles')->truncate();
-    DB::table('role_users')->truncate();
-    DB::table('throttle')->truncate();
     $rows = [
       [
         'name' => 'Administrador',
@@ -30,15 +28,15 @@ class DataRoleSeeder extends Seeder
         ]
       ],
       [
-        'name' => 'Manager',
-        'slug' => 'manager',
+        'name' => 'Agente',
+        'slug' => 'agent',
         'permissions' => [
-            'users' => false
+            'users' => true
         ]
       ],
       [
-        'name' => 'Agente',
-        'slug' => 'agent',
+        'name' => 'Manager',
+        'slug' => 'manager',
         'permissions' => [
             'users' => false
         ]
@@ -57,6 +55,7 @@ class DataRoleSeeder extends Seeder
         'slug' => $row['slug'],
         'permissions' => $row['permissions']
       ]);
+      $this->command->info('ROLE='. $row['name']);
     endforeach;
   }
 }

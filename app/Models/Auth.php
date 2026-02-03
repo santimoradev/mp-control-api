@@ -14,14 +14,12 @@ class Auth extends SentinelUser
         'last_name',
         'first_name',
         'permissions',
-        'mall_id',
         'status',
     ];
 
     protected $loginNames = ['email', 'username'];
 
     protected $casts = [
-        'mall_id' => 'integer',
-        'status' => 'boolean'
+        'status' => 'integer'
     ];
 }

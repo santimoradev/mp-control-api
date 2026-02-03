@@ -9,7 +9,6 @@ use App\Http\Resources\BaseCollection;
 use Sentinel;
 
 use App\Models\User;
-use App\Models\Client;
 
 class UserController extends CoreController
 {
@@ -26,7 +25,7 @@ class UserController extends CoreController
         $subquery->orWhere('username','LIKE','%'.$input['s'].'%');
       });
     endif;
-    $query->with(['mall', 'roles']);
+    $query->with(['roles']);
     $query->orderBy('id','Desc');
     $rows = $query->paginate(10);
     $this->setData(new BaseCollection($rows) );

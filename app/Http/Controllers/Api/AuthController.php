@@ -22,7 +22,7 @@ class AuthController extends CoreController
   public function doLogin(Request $request)
   {
     $input = $request->all();
-
+    //TODO: review login with username or email
     if ( str_contains( $input['username'], '@') ) :
         $credentials = [
             'email' => $input['username'],
@@ -37,23 +37,24 @@ class AuthController extends CoreController
     $token = JWTAuth::attempt( $credentials );
     try {
         $user = Sentinel::authenticateAndRemember( $credentials );
-        $this->addSuccessMessage('Credenciales correctas','Inicio de sesión correcto');
-        $this->setActivityLog([
-          'user_id'     => $user->id,
-          'action'      => 'sign_in',
-          'module'      => 'Auth',
-          'description' => 'Inicio de sesión',
-          'oldData'     => null,
-          'newData'     => null,
-        ]);
+        if ( $user ) :
+          $this->addSuccessMessage('Credenciales correctas','Inicio de sesión correcto');
+          $this->setActivityLog([
+            'user_id'     => $user->id,
+            'action'      => 'sign_in',
+            'module'      => 'Auth',
+            'title'       => 'Inicio de sesión',
+            'description' => 'El usuario ha iniciado sesión correctamente.',
+          ]);
+        endif;
     } catch( ThrottlingException $e ) {
         $delay = $e->getDelay();
         $this->addErrorMessage('Bloqueado por muchos intentos','Has sido bloqueado por '.$delay.' segundos', 429, '4.0.2');
         return $this->result();
     }
       if ( $user ):
-        $userDto = User::with(['mall'])->find($user->id);
-        $userAccount = User::with(['roles', 'mall'])->find($user->id);
+        $userDto = User::find($user->id);
+        $userAccount = User::with(['roles'])->find($user->id);
         if ( !$userAccount->status  ) :
             $this->addErrorMessage('Usuario desactivado.', 'No tienes permisos para acceder.', 403, '4.0.3');
             return $this->result();
@@ -65,22 +66,5 @@ class AuthController extends CoreController
         $this->addErrorMessage('Inicio de sesión','Cédula o clave incorrecta', 401, '4.0.1');
       endif;
     return $this->result();
-  }
-  public function doSign(Request $request)
-  {
-    $toSign = $request->input('data'); // <-- AQUÍ EL CAMBIO
-
-    if (!$toSign) {
-        return response("Missing data", 400);
-    }
-
-    $privateKey = openssl_pkey_get_private(file_get_contents(storage_path('certs/private.key')));
-
-    // openssl_sign($toSign, $signature, $privateKey, OPENSSL_ALGO_SHA512);
-    openssl_sign($toSign, $signature, $privateKey, OPENSSL_ALGO_SHA1);
-
-    openssl_free_key($privateKey);
-
-    return response(base64_encode($signature))->header('Content-Type', 'text/plain');
   }
 }

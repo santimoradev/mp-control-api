@@ -26,26 +26,38 @@ class DataUserSeeder extends Seeder
     {
       Model::unguard();
 
-      DB::table('users')->truncate();
-      DB::table('activations')->truncate();
-      DB::table('reminders')->truncate();
-      DB::table('persistences')->truncate();
-      DB::table('role_users')->truncate();
-
       $rows = [
         [
+          'email' => 'santimoradev@gmail.com',
           'username' => '0930519350',
-          'password' => '0930519350',
-          'first_name' => 'Webmaster',
+          'password' => '123456',
+          'first_name' => 'Admin',
           'last_name' => 'Dev',
           'role' => 1
         ],
         [
-          'username' => '0987654321',
-          'password' => '0987654321',
-          'first_name' => 'John',
-          'last_name' => 'Doe',
+          'email' => 'smora@gmail.com',
+          'username' => 'smora@gmail.com',
+          'password' => '123456',
+          'first_name' => 'Agente',
+          'last_name' => 'Dev',
           'role' => 2
+        ],
+        [
+          'email' => 'santiago@sandortech.com',
+          'username' => 'santiago@sandortech.com',
+          'password' => '123456',
+          'first_name' => 'Manager',
+          'last_name' => 'Dev',
+          'role' => 3
+        ],
+        [
+          'email' => 'santiagomora@hotmail.com',
+          'username' => '0930519350',
+          'password' => '123456',
+          'first_name' => 'Staff',
+          'last_name' => 'Dev',
+          'role' => 4
         ]
       ];
 
@@ -56,14 +68,14 @@ class DataUserSeeder extends Seeder
         $dataUser = [
             'username' => $row['username'],
             'password' => $row['password'],
-            'email' => $row['username'].'@mktapp.com',
+            'email' => $row['email'],
             'first_name' => $row['first_name'],
             'last_name' => $row['last_name'],
             'status' => 1
         ];
       $user = Sentinel::registerAndActivate($dataUser);
       if ( $role ) $user->roles()->attach( $role );
-        $this->command->info('USER_ID='. $user->id . ' CI='.$user->username);
+        $this->command->info('USER_ID='. $user->id . ' USERNAME='.$user->username);
       endforeach;
     }
 }

@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 
-class Library extends Model
+class Media extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $table = 'library';
+    protected $table = 'media';
     protected $fillable = [
-        'name', 'pathname', 'extension'
+        'file_name', 'file_path', 'mime_type', 'extension', 'file_size'
     ];
     protected $hidden = [
         'created_at',  'updated_at' , 'pivot', 'deleted_at'
@@ -24,8 +24,7 @@ class Library extends Model
     protected function getUrlAttribute()
     {
 
-        $url = Storage::disk('uploads')->url($this->pathname);
-
-        return $url;
+      $url = Storage::disk('uploads')->url($this->file_path . '/' . $this->file_name);
+      return $url;
     }
 }

@@ -11,11 +11,12 @@ class ActivityLog extends Model
   protected $table = 'activity_logs';
   protected $fillable = [
     'user_id',
-    'action',
-    'module',
+    'action_name',
+    'module_name',
+    'title',
     'description',
-    'before',
-    'after',
+    'before_data',
+    'after_data',
     'ip_address',
     'user_agent'
   ];

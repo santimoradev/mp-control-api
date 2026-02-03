@@ -5,9 +5,9 @@ namespace App\Services;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
-use App\Models\Library;
+use App\Models\Media;
 
-class LibraryUploader
+class MediaUploader
 {
   public function upload(string $folder, UploadedFile $file )
   {
@@ -16,12 +16,15 @@ class LibraryUploader
     $url = Storage::disk('uploads')->url($pathname);
     $extension = $file->extension();
     $filename = str_replace(  $newFolder.'/', '', $pathname );
-    $library = Library::create([
-        'name' => $filename,
-        'pathname' => $pathname,
-        'extension' => $extension
+
+    $media = Media::create([
+        'file_name' => $filename,
+        'file_path' => $pathname,
+        'file_size' => $file->getSize(),
+        'extension' => $extension,
+        'mime_type' => $file->getMimeType(),
     ]);
-    $library->url = $url;
-    return $library;
+    $media->url = $url;
+    return $media;
   }
 }

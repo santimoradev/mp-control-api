@@ -64,12 +64,13 @@ class CoreController extends Controller
   public function setActivityLog( $data )
   {
     ActivityLog::create([
-        'user_id'    => $data['user_id'] ?? $this->user->id,
-        'action'     => $data['action'],
-        'module'     => $data['module'],
-        'description'=> $data['description'],
-        'before'     => $data['oldData'],
-        'after'      => $data['newData'],
+        'user_id'         => $data['user_id'],
+        'action_name'     => $data['action'],
+        'module_name'     => $data['module'],
+        'title'           => $data['title'],
+        'description'     => $data['description'],
+        'before_data'     => $data['oldData'] ?? null,
+        'after_data'      => $data['newData'] ?? null,
         'ip_address' => request()->ip(),
         'user_agent' => request()->userAgent(),
     ]);
@@ -118,7 +119,7 @@ class CoreController extends Controller
       'status' => $this->status,
       'errorCode' => $this->errorCode,
       'message' => $this->message,
-      'timestamps' => Carbon::now()->format('Y-m-d H:i:s')
+      'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
     ], $this->statusCode);
   }
 }
