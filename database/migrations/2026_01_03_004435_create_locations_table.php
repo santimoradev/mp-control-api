@@ -46,8 +46,8 @@ return new class extends Migration
               ->nullOnDelete();
 
         $table->integer('zoom');
-        $table->decimal('latitude', 10, 7)->nullable();
-        $table->decimal('longitude', 10, 7)->nullable();
+        $table->decimal('lat', 10, 7)->nullable();
+        $table->decimal('lng', 10, 7)->nullable();
         $table->string('address')->nullable();
         $table->text('description');
 

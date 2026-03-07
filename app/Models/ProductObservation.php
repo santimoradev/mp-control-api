@@ -6,27 +6,31 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ProductPrice extends Model
+class ProductObservation extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $table = 'product_prices';
+    protected $table = 'observations';
 
     protected $fillable = [
-        'business_id', 'user_id', 'location_id', 'product_id', 'price', 'year', 'month'
+        'visit_id', 'business_id', 'location_id', 'created_by', 'product_id', 'price', 'stock', 'observed_at', 'expiration_date'
     ];
 
+    protected $casts = [
+      'price' => 'float',
+      'stock' => 'integer',
+    ];
     public function business()
     {
         return $this->belongsTo(Business::class, 'business_id');
     }
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
     public function location()
     {
         return $this->belongsTo(Location::class, 'location_id');
+    }
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
     public function product()
     {

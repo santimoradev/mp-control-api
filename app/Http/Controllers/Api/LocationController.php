@@ -16,7 +16,7 @@ class LocationController extends CoreController
   public function index(Request $request)
   {
     $take = [
-      'search', 'provinceId', 'cityId'
+      'search', 'provinceId', 'cityId', 'notIn'
     ];
     $input = $request->only($take);
     $query = Location::query();
@@ -35,7 +35,14 @@ class LocationController extends CoreController
     endif;
 
     $query->with(['province', 'city']);
-    $query->orderBy('id','Desc');
+    if ( $request->get('notIn') ) :
+      $query->whereNotIn('id', $request->notIn );
+    endif;
+    if ( $request->get('all')):
+      $query->orderBy('name','Asc');
+    else:
+      $query->orderBy('id','Desc');
+    endif;
     $rows = $query->paginate(10);
     $this->setData(new BaseCollection($rows) );
 

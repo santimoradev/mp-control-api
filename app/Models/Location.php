@@ -17,15 +17,15 @@ class Location extends Model
     use SoftDeletes;
     protected $table = 'locations';
     protected $fillable = [
-        'name', 'address' , 'province_id', 'city_id', 'media_id', 'zoom', 'latitude', 'longitude', 'description'
+        'name', 'address' , 'province_id', 'city_id', 'media_id', 'zoom', 'lat', 'lng', 'description'
     ];
     protected $hidden = [
         'created_at', 'pivot', 'deleted_at'
     ];
 
     protected $casts = [
-      'latitude' => 'decimal:7',
-      'longitude' => 'decimal:7'
+      'lat' => 'float',
+      'lng' => 'float',
     ];
     public function setDescriptionAttribute($value)
     {

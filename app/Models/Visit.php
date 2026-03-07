@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Vinkla\Hashids\Facades\Hashids;
 
 class Visit extends Model
 {
@@ -12,27 +13,63 @@ class Visit extends Model
     use SoftDeletes;
     protected $table = 'visits';
     protected $fillable = [
-        'business_id', 'user_id', 'location_id', 'started_at', 'started_media_id', 'started_lat', 'started_lng', 'finished_at', 'finished_media_id', 'finished_lat', 'finished_lng', 'observations'
+        'route_id',
+        'location_id',
+        'assigned_to',
+        'scheduled_date',
+        'check_in', 'check_out',
+        'media_id',
+        'lat', 'lng',
+        'status'
     ];
 
-    public function business()
+    protected $casts = [
+      'check_in' => 'datetime',
+      'check_out' => 'datetime',
+      'lat' => 'float',
+      'lng' => 'float',
+      'status' => 'integer'
+    ];
+
+    public function getMaskIdAttribute()
     {
-        return $this->belongsTo(Business::class, 'business_id');
+      return Hashids::encode($this->id);
     }
-    public function user()
+    public function route()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(Route::class, 'route_id');
     }
     public function location()
     {
         return $this->belongsTo(Location::class, 'location_id');
     }
-    public function startedMedia()
+    public function assignedTo()
     {
-        return $this->belongsTo(Media::class, 'started_media_id');
+        return $this->belongsTo(User::class, 'assigned_to');
     }
-    public function finishedMedia()
+    public function media()
     {
-        return $this->belongsTo(Media::class, 'finished_media_id');
+        return $this->belongsTo(Media::class, 'media_id');
+    }
+
+    public function exhibitions()
+    {
+        return $this->hasMany(Exhibition::class, 'visit_id');
+    }
+
+    public function aditionals()
+    {
+        return $this->hasMany(Aditional::class, 'visit_id')
+            ->whereIn('type', [1,2]);
+    }
+
+    public function competence()
+    {
+        return $this->hasMany(Aditional::class, 'visit_id')
+            ->where('type', 3);
+    }
+    public function observations()
+    {
+        return $this->hasMany(ProductObservation::class, 'visit_id');
     }
 }

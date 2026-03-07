@@ -19,7 +19,7 @@ class MediaUploader
 
     $media = Media::create([
         'file_name' => $filename,
-        'file_path' => $pathname,
+        'file_path' => $newFolder,
         'file_size' => $file->getSize(),
         'extension' => $extension,
         'mime_type' => $file->getMimeType(),

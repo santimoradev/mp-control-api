@@ -10,25 +10,30 @@ class Exhibition extends Model
 {
     use HasFactory;
     use SoftDeletes;
+
     protected $table = 'exhibitions';
     protected $fillable = [
-        'business_id', 'user_id', 'location_id', 'media_id'
+        'name', 'source_id', 'visit_id', 'business_id', 'location_id', 'created_by', 'before_media_id', 'after_media_id', 'before_description', 'after_description', 'observed_at'
     ];
 
     public function business()
     {
         return $this->belongsTo(Business::class, 'business_id');
     }
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
     public function location()
     {
         return $this->belongsTo(Location::class, 'location_id');
     }
-    public function media()
+    public function createdBy()
     {
-        return $this->belongsTo(Media::class, 'media_id');
+        return $this->belongsTo(User::class, 'created_by');
+    }
+    public function beforeMedia()
+    {
+        return $this->belongsTo(Media::class, 'before_media_id');
+    }
+    public function afterMedia()
+    {
+        return $this->belongsTo(Media::class, 'after_media_id');
     }
 }

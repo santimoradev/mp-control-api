@@ -15,19 +15,24 @@ class UserController extends CoreController
   public function index(Request $request)
   {
     $take = [
-      's'
+      's', 'role_id', 'limit'
     ];
     $input = $request->only($take);
     $query = User::query();
-
+    $input['limit'] = $request->has('limit') ? $request->get('limit') : 10 ;
     if ( $request->has('s') AND $request->s) :
       $query->where( function($subquery) use ($input) {
         $subquery->orWhere('username','LIKE','%'.$input['s'].'%');
       });
     endif;
+    if ( $request->has('role_id') ) :
+      $query->whereHas('roles', function($subquery) use ($input) {
+          $subquery->where('id', $input['role_id']);
+      });
+    endif;
     $query->with(['roles']);
     $query->orderBy('id','Desc');
-    $rows = $query->paginate(10);
+    $rows = $query->paginate($input['limit']);
     $this->setData(new BaseCollection($rows) );
 
     return $this->result();

@@ -71,8 +71,8 @@ class CoreController extends Controller
         'description'     => $data['description'],
         'before_data'     => $data['oldData'] ?? null,
         'after_data'      => $data['newData'] ?? null,
-        'ip_address' => request()->ip(),
-        'user_agent' => request()->userAgent(),
+        'ip_address'      => request()->ip(),
+        'user_agent'      => request()->userAgent(),
     ]);
   }
   public function setData( $data )

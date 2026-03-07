@@ -20,8 +20,16 @@ class JWTMiddleWare
      */
     public function handle(Request $request, Closure $next)
     {
+
+
       try {
-        $user = JWTAuth::parseToken()->authenticate();
+        // $user = JWTAuth::parseToken()->authenticate();
+
+        $token = $request->bearerToken();
+        if (!$token) {
+          throw new Exception('TOKEN_NOT_FOUND');
+        }
+        $user = JWTAuth::setToken($token)->authenticate();
       } catch (TokenExpiredException $e) {
         $reason = 'Su sesión ha expirado';
         $message = 'Por favor, vuelva a autenticarse.';
