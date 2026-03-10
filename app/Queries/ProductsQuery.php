@@ -107,7 +107,16 @@ class ProductsQuery
               DB::raw('MAX(o.observed_at) as last_observed_at'),
           ])
           ->whereNotNull('o.price')
-          ->groupBy('l.id', 'p.id')
+          ->groupBy([
+              'pr.id',
+              'pr.name',
+              'c.id',
+              'c.name',
+              'l.id',
+              'l.name',
+              'p.id',
+              'p.name'
+          ])
           ->orderBy('l.name')
           ->orderBy('p.name');
 
