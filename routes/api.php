@@ -13,7 +13,12 @@ use App\Http\Controllers\Api\VisitController;
 use App\Http\Controllers\Api\VisitTaskController;
 use App\Http\Controllers\Api\AditionalController;
 use App\Http\Controllers\Api\ExhibitionController;
-use App\Http\Controllers\Api\ReportController;
+use App\Http\Controllers\Api\ReportRoutesController;
+use App\Http\Controllers\Api\ReportComplianceController;
+use App\Http\Controllers\Api\ReportProductsController;
+use App\Http\Controllers\Api\ReportPhotosController;
+use App\Http\Controllers\Api\ExportController;
+use App\Http\Controllers\Api\ExportPhotosController;
 
 Route::prefix('v1')->group( function() {
   Route::namespace('Api')->group( function () {
@@ -64,8 +69,29 @@ Route::prefix('v1')->group( function() {
         });
       });
 
-      Route::prefix('report')->group( function() {
-        Route::get( 'visits' , [ ReportController::class, 'visits' ]);
+      Route::prefix('reports')->group( function() {
+        Route::get( 'visits' , [ ReportRoutesController::class, 'visits' ]);
+        Route::prefix('compliance')->group( function() {
+          Route::get( 'general' , [ ReportComplianceController::class, 'general' ]);
+        });
+        Route::prefix('products')->group( function() {
+          Route::get( 'inventory' , [ ReportProductsController::class, 'getInventory' ]);
+          Route::get( 'inventory-widgets' , [ ReportProductsController::class, 'getInventoryWidgets' ]);
+          Route::get( 'range-prices' , [ ReportProductsController::class, 'getRangePrices' ]);
+          Route::get( 'range-prices' , [ ReportProductsController::class, 'getRangePrices' ]);
+          Route::get( 'market-average' , [ ReportProductsController::class, 'getMarketAverage' ]);
+        });
+        Route::prefix('photos')->group( function() {
+          Route::get( 'aditionals' , [ ReportPhotosController::class, 'getAditionals' ]);
+          Route::get( 'exhibitions' , [ ReportPhotosController::class, 'getExhibitions' ]);
+        });
+      });
+      Route::prefix('exports')->group( function() {
+        Route::get( 'visits' , [ ExportController::class, 'visits' ]);
+        Route::get( 'inventory' , [ ExportController::class, 'inventory' ]);
+        Route::get( 'range-prices' , [ ExportController::class, 'rangePrices' ]);
+        Route::get( 'market-average' , [ ExportController::class, 'marketAverage' ]);
+        Route::get( 'aditionals' , [ ExportPhotosController::class, 'aditionals' ]);
       });
     });
   });

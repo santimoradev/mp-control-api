@@ -72,4 +72,5 @@ class Visit extends Model
     {
         return $this->hasMany(ProductObservation::class, 'visit_id');
     }
+
 }
