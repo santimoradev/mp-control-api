@@ -45,6 +45,8 @@ class VisitResource extends JsonResource
               'id' => $this->route?->business?->id,
               'name' => $this->route?->business?->name,
             ],
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 }

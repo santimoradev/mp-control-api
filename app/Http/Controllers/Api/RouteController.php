@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\Route;
 use App\Models\VisitPlanStop;
 use App\Services\MediaUploader;
+use App\Http\Resources\VisitResource;
 
 class RouteController extends CoreController
 {
@@ -19,15 +20,25 @@ class RouteController extends CoreController
   {
 
     $query = Route::query();
+
+    $take = ['search'];
+    $input = $request->only($take);
+
+    if ( $request->has('search') AND $request->search) :
+      $query->where( function($subquery) use ($input) {
+        $subquery->orWhere('title','LIKE','%'.$input['search'].'%');
+      });
+    endif;
     $query->with([
       'business', 'createdBy'
     ]);
     $query->withCount('visits')->get();
+    $query->withCompliance();
     $query->orderBy('id', 'Desc');
 
     $rows = $query->paginate(10);
 
-    $this->setData($rows);
+    $this->setData( new BaseCollection($rows) );
     return $this->result();
   }
   public function store(Request $request)
@@ -60,6 +71,31 @@ class RouteController extends CoreController
       $this->addErrorMessage('Ha ocurrido un error', $e->getMessage() );
       DB::rollBack();
     }
+    return $this->result();
+  }
+  public function show(Request $request, $id)
+  {
+
+    $query = Route::query();
+
+    $query->with([
+      'business', 'createdBy'
+    ]);
+
+    $queryVisits = clone $query;
+
+    $queryVisits->with([
+      'visits.location.province', 'visits.location.city', 'visits.assignedTo'
+    ]);
+
+    $query->withCount('visits')->get();
+
+    $row = $query->find($id);
+
+    $rowVisits = $queryVisits->find($id);
+    $visits = $rowVisits->visits()->orderBy('scheduled_date', 'desc')->get();
+    $this->addData( 'route', $row );
+    $this->addData( 'visits', VisitResource::collection($visits) );
     return $this->result();
   }
 }

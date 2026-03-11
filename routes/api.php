@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProvinceController;
 use App\Http\Controllers\Api\CityController;
 use App\Http\Controllers\Api\RouteController;
+use App\Http\Controllers\Api\TrackingController;
 use App\Http\Controllers\Api\VisitController;
 use App\Http\Controllers\Api\VisitTaskController;
 use App\Http\Controllers\Api\AditionalController;
@@ -45,6 +46,8 @@ Route::prefix('v1')->group( function() {
         Route::get( '{id}/cities' , [ CityController::class, 'index' ]);
       });
       Route::prefix('routes')->group( function() {
+        Route::get( 'tracking' , [ TrackingController::class, 'index' ]);
+        Route::get( '{id}' , [ RouteController::class, 'show' ]);
         Route::get( '' , [ RouteController::class, 'index' ]);
         Route::post( '' , [ RouteController::class, 'store' ]);
       });
