@@ -101,9 +101,9 @@ Route::prefix('v1')->group( function() {
       Route::prefix('dashboard')->group( function() {
         Route::get( '' , [ DashboardController::class, 'index' ]);
       });
-      Route::prefix('sync')->group( function() {
-        Route::get( 'visit-expired' , [ SyncController::class, 'visitExpired' ]);
-      });
+    });
+    Route::prefix('sync')->group( function() {
+      Route::get( 'visit-expired' , [ SyncController::class, 'visitExpired' ]);
     });
   });
 });
