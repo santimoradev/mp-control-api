@@ -18,6 +18,8 @@ use App\Http\Controllers\Api\ReportRoutesController;
 use App\Http\Controllers\Api\ReportComplianceController;
 use App\Http\Controllers\Api\ReportProductsController;
 use App\Http\Controllers\Api\ReportPhotosController;
+use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\SyncController;
 use App\Http\Controllers\Api\ExportController;
 use App\Http\Controllers\Api\ExportPhotosController;
 
@@ -95,6 +97,12 @@ Route::prefix('v1')->group( function() {
         Route::get( 'range-prices' , [ ExportController::class, 'rangePrices' ]);
         Route::get( 'market-average' , [ ExportController::class, 'marketAverage' ]);
         Route::get( 'aditionals' , [ ExportPhotosController::class, 'aditionals' ]);
+      });
+      Route::prefix('dashboard')->group( function() {
+        Route::get( '' , [ DashboardController::class, 'index' ]);
+      });
+      Route::prefix('sync')->group( function() {
+        Route::get( 'visit-expired' , [ SyncController::class, 'visitExpired' ]);
       });
     });
   });
